@@ -10,14 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PathsRouteImport } from './routes/paths'
+import { Route as FormulasRouteImport } from './routes/formulas'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathsPathIdRouteImport } from './routes/paths.$pathId'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons.$lessonId'
+import { Route as FormulasNameRouteImport } from './routes/formulas.$name'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const PathsRoute = PathsRouteImport.update({
   id: '/paths',
   path: '/paths',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FormulasRoute = FormulasRouteImport.update({
+  id: '/formulas',
+  path: '/formulas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +48,11 @@ const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
   path: '/lessons/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FormulasNameRoute = FormulasNameRouteImport.update({
+  id: '/$name',
+  path: '/$name',
+  getParentRoute: () => FormulasRoute,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -43,23 +61,32 @@ const ApiChatRoute = ApiChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/formulas/$name': typeof FormulasNameRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/formulas/$name': typeof FormulasNameRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/formulas/$name': typeof FormulasNameRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
 }
@@ -67,23 +94,39 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/formulas'
     | '/paths'
     | '/api/chat'
+    | '/formulas/$name'
     | '/lessons/$lessonId'
     | '/paths/$pathId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/paths' | '/api/chat' | '/lessons/$lessonId' | '/paths/$pathId'
+  to:
+    | '/'
+    | '/auth'
+    | '/formulas'
+    | '/paths'
+    | '/api/chat'
+    | '/formulas/$name'
+    | '/lessons/$lessonId'
+    | '/paths/$pathId'
   id:
     | '__root__'
     | '/'
+    | '/auth'
+    | '/formulas'
     | '/paths'
     | '/api/chat'
+    | '/formulas/$name'
     | '/lessons/$lessonId'
     | '/paths/$pathId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  FormulasRoute: typeof FormulasRouteWithChildren
   PathsRoute: typeof PathsRouteWithChildren
   ApiChatRoute: typeof ApiChatRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
@@ -96,6 +139,20 @@ declare module '@tanstack/react-router' {
       path: '/paths'
       fullPath: '/paths'
       preLoaderRoute: typeof PathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/formulas': {
+      id: '/formulas'
+      path: '/formulas'
+      fullPath: '/formulas'
+      preLoaderRoute: typeof FormulasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -119,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonsLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/formulas/$name': {
+      id: '/formulas/$name'
+      path: '/$name'
+      fullPath: '/formulas/$name'
+      preLoaderRoute: typeof FormulasNameRouteImport
+      parentRoute: typeof FormulasRoute
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -128,6 +192,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface FormulasRouteChildren {
+  FormulasNameRoute: typeof FormulasNameRoute
+}
+
+const FormulasRouteChildren: FormulasRouteChildren = {
+  FormulasNameRoute: FormulasNameRoute,
+}
+
+const FormulasRouteWithChildren = FormulasRoute._addFileChildren(
+  FormulasRouteChildren,
+)
 
 interface PathsRouteChildren {
   PathsPathIdRoute: typeof PathsPathIdRoute
@@ -141,6 +217,8 @@ const PathsRouteWithChildren = PathsRoute._addFileChildren(PathsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  FormulasRoute: FormulasRouteWithChildren,
   PathsRoute: PathsRouteWithChildren,
   ApiChatRoute: ApiChatRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,

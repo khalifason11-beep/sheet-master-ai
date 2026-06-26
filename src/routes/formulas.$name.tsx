@@ -51,7 +51,7 @@ function FormulaPage() {
           <div>
             <h2 className="font-display text-xl font-bold">Arguments</h2>
             <div className="mt-3 surface-card divide-y divide-border">
-              {f.args.map((a) => (
+              {f.args.map((a: {name: string; desc: string}) => (
                 <div key={a.name} className="grid grid-cols-[140px_1fr] gap-4 p-4 text-sm">
                   <code className="font-mono font-semibold text-primary">{a.name}</code>
                   <p className="text-muted-foreground">{a.desc}</p>
@@ -72,11 +72,11 @@ function FormulaPage() {
           <div className="grid gap-5 sm:grid-cols-2">
             <div className="surface-card p-5">
               <h3 className="flex items-center gap-2 font-display font-semibold"><Lightbulb className="h-4 w-4 text-warning" /> Pro tips</h3>
-              <ul className="mt-3 space-y-1.5 text-sm">{f.tips.map((t) => <li key={t}>→ {t}</li>)}</ul>
+              <ul className="mt-3 space-y-1.5 text-sm">{f.tips.map((t: string) => <li key={t}>→ {t}</li>)}</ul>
             </div>
             <div className="surface-card p-5">
               <h3 className="flex items-center gap-2 font-display font-semibold"><AlertTriangle className="h-4 w-4 text-destructive" /> Watch out</h3>
-              <ul className="mt-3 space-y-1.5 text-sm">{f.mistakes.map((t) => <li key={t}>⚠ {t}</li>)}</ul>
+              <ul className="mt-3 space-y-1.5 text-sm">{f.mistakes.map((t: string) => <li key={t}>⚠ {t}</li>)}</ul>
             </div>
           </div>
 
@@ -84,7 +84,7 @@ function FormulaPage() {
             <div>
               <h2 className="flex items-center gap-2 font-display text-xl font-bold"><Link2 className="h-4 w-4" /> Related formulas</h2>
               <div className="mt-3 flex flex-wrap gap-2">
-                {f.related.map((r) => {
+                {f.related.map((r: string) => {
                   const exists = formulas.some((x) => x.name === r);
                   return exists ? (
                     <Link key={r} to="/formulas/$name" params={{ name: r }} className="rounded-full border border-border bg-card px-3 py-1 font-mono text-xs hover:border-primary hover:text-primary">{r}</Link>
