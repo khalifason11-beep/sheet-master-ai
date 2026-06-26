@@ -9,12 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PathsRouteImport } from './routes/paths'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PathsPathIdRouteImport } from './routes/paths.$pathId'
+import { Route as LessonsLessonIdRouteImport } from './routes/lessons.$lessonId'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const PathsRoute = PathsRouteImport.update({
+  id: '/paths',
+  path: '/paths',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PathsPathIdRoute = PathsPathIdRouteImport.update({
+  id: '/$pathId',
+  path: '/$pathId',
+  getParentRoute: () => PathsRoute,
+} as any)
+const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
+  id: '/lessons/$lessonId',
+  path: '/lessons/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -25,37 +43,80 @@ const ApiChatRoute = ApiChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/chat'
+  fullPaths:
+    | '/'
+    | '/paths'
+    | '/api/chat'
+    | '/lessons/$lessonId'
+    | '/paths/$pathId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/chat'
-  id: '__root__' | '/' | '/api/chat'
+  to: '/' | '/paths' | '/api/chat' | '/lessons/$lessonId' | '/paths/$pathId'
+  id:
+    | '__root__'
+    | '/'
+    | '/paths'
+    | '/api/chat'
+    | '/lessons/$lessonId'
+    | '/paths/$pathId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PathsRoute: typeof PathsRouteWithChildren
   ApiChatRoute: typeof ApiChatRoute
+  LessonsLessonIdRoute: typeof LessonsLessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/paths': {
+      id: '/paths'
+      path: '/paths'
+      fullPath: '/paths'
+      preLoaderRoute: typeof PathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paths/$pathId': {
+      id: '/paths/$pathId'
+      path: '/$pathId'
+      fullPath: '/paths/$pathId'
+      preLoaderRoute: typeof PathsPathIdRouteImport
+      parentRoute: typeof PathsRoute
+    }
+    '/lessons/$lessonId': {
+      id: '/lessons/$lessonId'
+      path: '/lessons/$lessonId'
+      fullPath: '/lessons/$lessonId'
+      preLoaderRoute: typeof LessonsLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -68,9 +129,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PathsRouteChildren {
+  PathsPathIdRoute: typeof PathsPathIdRoute
+}
+
+const PathsRouteChildren: PathsRouteChildren = {
+  PathsPathIdRoute: PathsPathIdRoute,
+}
+
+const PathsRouteWithChildren = PathsRoute._addFileChildren(PathsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PathsRoute: PathsRouteWithChildren,
   ApiChatRoute: ApiChatRoute,
+  LessonsLessonIdRoute: LessonsLessonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

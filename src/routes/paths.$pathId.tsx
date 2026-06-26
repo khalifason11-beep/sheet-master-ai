@@ -56,7 +56,7 @@ function PathDetail() {
           <div className="mx-auto max-w-5xl px-4 sm:px-6">
             <h2 className="font-display text-2xl font-bold">Curriculum</h2>
             <ol className="mt-6 space-y-3">
-              {path.lessons.map((l, i) => (
+              {path.lessons.map((l: any, i: number) => (
                 <li key={l.id}>
                   <Link
                     to="/lessons/$lessonId"

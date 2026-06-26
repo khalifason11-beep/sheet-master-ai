@@ -30,7 +30,7 @@ function LessonPage() {
   const { lesson, path } = Route.useLoaderData();
   const [solved, setSolved] = useState(false);
 
-  const lessonIndex = path.lessons.findIndex((l) => l.id === lesson.id);
+  const lessonIndex = path.lessons.findIndex((l: any) => l.id === lesson.id);
   const nextLesson = path.lessons[lessonIndex + 1];
 
   const handleSolved = async () => {
@@ -74,7 +74,7 @@ function LessonPage() {
         <article className="mx-auto max-w-5xl space-y-10 px-4 py-12 sm:px-6">
           <Section icon={<Target className="h-4 w-4" />} title="Learning objectives">
             <ul className="space-y-2">
-              {lesson.objectives.map((o, i) => (
+              {lesson.objectives.map((o: string, i: number) => (
                 <li key={i} className="flex items-start gap-2.5 text-sm">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                   <span>{o}</span>
@@ -101,12 +101,12 @@ function LessonPage() {
           <div className="grid gap-5 sm:grid-cols-2">
             <Section icon={<Lightbulb className="h-4 w-4 text-warning" />} title="Pro tips" compact>
               <ul className="space-y-2">
-                {lesson.proTips.map((t, i) => <li key={i} className="text-sm">→ {t}</li>)}
+                {lesson.proTips.map((t: string, i: number) => <li key={i} className="text-sm">→ {t}</li>)}
               </ul>
             </Section>
             <Section icon={<AlertTriangle className="h-4 w-4 text-destructive" />} title="Common mistakes" compact>
               <ul className="space-y-2">
-                {lesson.mistakes.map((t, i) => <li key={i} className="text-sm">⚠ {t}</li>)}
+                {lesson.mistakes.map((t: string, i: number) => <li key={i} className="text-sm">⚠ {t}</li>)}
               </ul>
             </Section>
           </div>
