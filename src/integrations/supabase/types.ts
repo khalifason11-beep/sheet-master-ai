@@ -14,7 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      lesson_progress: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          id: string
+          lesson_id: string
+          path_id: string | null
+          score: number
+          updated_at: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lesson_id: string
+          path_id?: string | null
+          score?: number
+          updated_at?: string
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          path_id?: string | null
+          score?: number
+          updated_at?: string
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          last_active: string | null
+          level: number
+          streak_days: number
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          last_active?: string | null
+          level?: number
+          streak_days?: number
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          last_active?: string | null
+          level?: number
+          streak_days?: number
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
