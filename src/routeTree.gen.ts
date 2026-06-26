@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PathsRouteImport } from './routes/paths'
 import { Route as FormulasRouteImport } from './routes/formulas'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathsPathIdRouteImport } from './routes/paths.$pathId'
@@ -26,6 +27,11 @@ const PathsRoute = PathsRouteImport.update({
 const FormulasRoute = FormulasRouteImport.update({
   id: '/formulas',
   path: '/formulas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -62,6 +68,7 @@ const ApiChatRoute = ApiChatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/dashboard'
     | '/formulas'
     | '/paths'
     | '/api/chat'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/dashboard'
     | '/formulas'
     | '/paths'
     | '/api/chat'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/dashboard'
     | '/formulas'
     | '/paths'
     | '/api/chat'
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  DashboardRoute: typeof DashboardRoute
   FormulasRoute: typeof FormulasRouteWithChildren
   PathsRoute: typeof PathsRouteWithChildren
   ApiChatRoute: typeof ApiChatRoute
@@ -146,6 +159,13 @@ declare module '@tanstack/react-router' {
       path: '/formulas'
       fullPath: '/formulas'
       preLoaderRoute: typeof FormulasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -218,6 +238,7 @@ const PathsRouteWithChildren = PathsRoute._addFileChildren(PathsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  DashboardRoute: DashboardRoute,
   FormulasRoute: FormulasRouteWithChildren,
   PathsRoute: PathsRouteWithChildren,
   ApiChatRoute: ApiChatRoute,
