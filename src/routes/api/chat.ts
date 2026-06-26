@@ -34,7 +34,7 @@ Rules:
 - If the learner asks for a concept, give: short definition, tiny example, a "watch out" line.
 - Never invent functions that don't exist in Excel.
 - If asked about something not Excel-related, gently steer back to Excel.`,
-          messages: convertToModelMessages(messages),
+          messages: await convertToModelMessages(messages),
         });
 
         return result.toUIMessageStreamResponse({ originalMessages: messages });
