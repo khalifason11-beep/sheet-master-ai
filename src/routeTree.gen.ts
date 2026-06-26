@@ -9,38 +9,172 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PathsRouteImport } from './routes/paths'
+import { Route as FormulasRouteImport } from './routes/formulas'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PathsPathIdRouteImport } from './routes/paths.$pathId'
+import { Route as LessonsLessonIdRouteImport } from './routes/lessons.$lessonId'
+import { Route as FormulasNameRouteImport } from './routes/formulas.$name'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const PathsRoute = PathsRouteImport.update({
+  id: '/paths',
+  path: '/paths',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FormulasRoute = FormulasRouteImport.update({
+  id: '/formulas',
+  path: '/formulas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PathsPathIdRoute = PathsPathIdRouteImport.update({
+  id: '/$pathId',
+  path: '/$pathId',
+  getParentRoute: () => PathsRoute,
+} as any)
+const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
+  id: '/lessons/$lessonId',
+  path: '/lessons/$lessonId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FormulasNameRoute = FormulasNameRouteImport.update({
+  id: '/$name',
+  path: '/$name',
+  getParentRoute: () => FormulasRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
+  '/formulas': typeof FormulasRouteWithChildren
+  '/paths': typeof PathsRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
+  '/formulas/$name': typeof FormulasNameRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
+  '/formulas': typeof FormulasRouteWithChildren
+  '/paths': typeof PathsRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
+  '/formulas/$name': typeof FormulasNameRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
+  '/formulas': typeof FormulasRouteWithChildren
+  '/paths': typeof PathsRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
+  '/formulas/$name': typeof FormulasNameRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/formulas'
+    | '/paths'
+    | '/api/chat'
+    | '/formulas/$name'
+    | '/lessons/$lessonId'
+    | '/paths/$pathId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/formulas'
+    | '/paths'
+    | '/api/chat'
+    | '/formulas/$name'
+    | '/lessons/$lessonId'
+    | '/paths/$pathId'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/formulas'
+    | '/paths'
+    | '/api/chat'
+    | '/formulas/$name'
+    | '/lessons/$lessonId'
+    | '/paths/$pathId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  DashboardRoute: typeof DashboardRoute
+  FormulasRoute: typeof FormulasRouteWithChildren
+  PathsRoute: typeof PathsRouteWithChildren
+  ApiChatRoute: typeof ApiChatRoute
+  LessonsLessonIdRoute: typeof LessonsLessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/paths': {
+      id: '/paths'
+      path: '/paths'
+      fullPath: '/paths'
+      preLoaderRoute: typeof PathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/formulas': {
+      id: '/formulas'
+      path: '/formulas'
+      fullPath: '/formulas'
+      preLoaderRoute: typeof FormulasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +182,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/paths/$pathId': {
+      id: '/paths/$pathId'
+      path: '/$pathId'
+      fullPath: '/paths/$pathId'
+      preLoaderRoute: typeof PathsPathIdRouteImport
+      parentRoute: typeof PathsRoute
+    }
+    '/lessons/$lessonId': {
+      id: '/lessons/$lessonId'
+      path: '/lessons/$lessonId'
+      fullPath: '/lessons/$lessonId'
+      preLoaderRoute: typeof LessonsLessonIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/formulas/$name': {
+      id: '/formulas/$name'
+      path: '/$name'
+      fullPath: '/formulas/$name'
+      preLoaderRoute: typeof FormulasNameRouteImport
+      parentRoute: typeof FormulasRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface FormulasRouteChildren {
+  FormulasNameRoute: typeof FormulasNameRoute
+}
+
+const FormulasRouteChildren: FormulasRouteChildren = {
+  FormulasNameRoute: FormulasNameRoute,
+}
+
+const FormulasRouteWithChildren = FormulasRoute._addFileChildren(
+  FormulasRouteChildren,
+)
+
+interface PathsRouteChildren {
+  PathsPathIdRoute: typeof PathsPathIdRoute
+}
+
+const PathsRouteChildren: PathsRouteChildren = {
+  PathsPathIdRoute: PathsPathIdRoute,
+}
+
+const PathsRouteWithChildren = PathsRoute._addFileChildren(PathsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  DashboardRoute: DashboardRoute,
+  FormulasRoute: FormulasRouteWithChildren,
+  PathsRoute: PathsRouteWithChildren,
+  ApiChatRoute: ApiChatRoute,
+  LessonsLessonIdRoute: LessonsLessonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
