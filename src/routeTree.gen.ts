@@ -17,6 +17,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathsPathIdRouteImport } from './routes/paths.$pathId'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons.$lessonId'
 import { Route as FormulasNameRouteImport } from './routes/formulas.$name'
+import { Route as AuthResetRouteImport } from './routes/auth.reset'
+import { Route as AuthForgotRouteImport } from './routes/auth.forgot'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const PathsRoute = PathsRouteImport.update({
@@ -59,6 +61,16 @@ const FormulasNameRoute = FormulasNameRouteImport.update({
   path: '/$name',
   getParentRoute: () => FormulasRoute,
 } as any)
+const AuthResetRoute = AuthResetRouteImport.update({
+  id: '/reset',
+  path: '/reset',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthForgotRoute = AuthForgotRouteImport.update({
+  id: '/forgot',
+  path: '/forgot',
+  getParentRoute: () => AuthRoute,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -67,22 +79,26 @@ const ApiChatRoute = ApiChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/auth/forgot': typeof AuthForgotRoute
+  '/auth/reset': typeof AuthResetRoute
   '/formulas/$name': typeof FormulasNameRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/auth/forgot': typeof AuthForgotRoute
+  '/auth/reset': typeof AuthResetRoute
   '/formulas/$name': typeof FormulasNameRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
@@ -90,11 +106,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
   '/paths': typeof PathsRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/auth/forgot': typeof AuthForgotRoute
+  '/auth/reset': typeof AuthResetRoute
   '/formulas/$name': typeof FormulasNameRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
@@ -108,6 +126,8 @@ export interface FileRouteTypes {
     | '/formulas'
     | '/paths'
     | '/api/chat'
+    | '/auth/forgot'
+    | '/auth/reset'
     | '/formulas/$name'
     | '/lessons/$lessonId'
     | '/paths/$pathId'
@@ -119,6 +139,8 @@ export interface FileRouteTypes {
     | '/formulas'
     | '/paths'
     | '/api/chat'
+    | '/auth/forgot'
+    | '/auth/reset'
     | '/formulas/$name'
     | '/lessons/$lessonId'
     | '/paths/$pathId'
@@ -130,6 +152,8 @@ export interface FileRouteTypes {
     | '/formulas'
     | '/paths'
     | '/api/chat'
+    | '/auth/forgot'
+    | '/auth/reset'
     | '/formulas/$name'
     | '/lessons/$lessonId'
     | '/paths/$pathId'
@@ -137,7 +161,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   FormulasRoute: typeof FormulasRouteWithChildren
   PathsRoute: typeof PathsRouteWithChildren
@@ -203,6 +227,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FormulasNameRouteImport
       parentRoute: typeof FormulasRoute
     }
+    '/auth/reset': {
+      id: '/auth/reset'
+      path: '/reset'
+      fullPath: '/auth/reset'
+      preLoaderRoute: typeof AuthResetRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/forgot': {
+      id: '/auth/forgot'
+      path: '/forgot'
+      fullPath: '/auth/forgot'
+      preLoaderRoute: typeof AuthForgotRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -212,6 +250,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthRouteChildren {
+  AuthForgotRoute: typeof AuthForgotRoute
+  AuthResetRoute: typeof AuthResetRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthForgotRoute: AuthForgotRoute,
+  AuthResetRoute: AuthResetRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface FormulasRouteChildren {
   FormulasNameRoute: typeof FormulasNameRoute
@@ -237,7 +287,7 @@ const PathsRouteWithChildren = PathsRoute._addFileChildren(PathsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRoute,
   FormulasRoute: FormulasRouteWithChildren,
   PathsRoute: PathsRouteWithChildren,
@@ -247,13 +297,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
