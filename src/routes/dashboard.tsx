@@ -22,6 +22,7 @@ function DashboardPage() {
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string>("");
+  const { usage } = useAiUsage();
 
   useEffect(() => {
     let mounted = true;
