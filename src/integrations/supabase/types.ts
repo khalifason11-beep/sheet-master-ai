@@ -14,6 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          code: string
+          description: string | null
+          earned_at: string
+          icon: string | null
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          description?: string | null
+          earned_at?: string
+          icon?: string | null
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          description?: string | null
+          earned_at?: string
+          icon?: string | null
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_usage_daily: {
+        Row: {
+          day: string
+          message_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          message_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          day?: string
+          message_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      app_config: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      bookmarks: {
+        Row: {
+          created_at: string
+          id: string
+          lesson_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lesson_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lesson_progress: {
         Row: {
           completed: boolean
@@ -61,6 +151,7 @@ export type Database = {
           id: string
           last_active: string | null
           level: number
+          plan: string
           streak_days: number
           updated_at: string
           xp: number
@@ -72,6 +163,7 @@ export type Database = {
           id: string
           last_active?: string | null
           level?: number
+          plan?: string
           streak_days?: number
           updated_at?: string
           xp?: number
@@ -83,9 +175,100 @@ export type Database = {
           id?: string
           last_active?: string | null
           level?: number
+          plan?: string
           streak_days?: number
           updated_at?: string
           xp?: number
+        }
+        Relationships: []
+      }
+      saved_formulas: {
+        Row: {
+          created_at: string
+          description: string | null
+          formula: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          formula: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          formula?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          billing_interval: string | null
+          created_at: string
+          current_period_end: string | null
+          plan: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          billing_interval?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          plan?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          billing_interval?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          plan?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          email_notifications: boolean
+          theme: string
+          updated_at: string
+          user_id: string
+          weekly_digest: boolean
+        }
+        Insert: {
+          email_notifications?: boolean
+          theme?: string
+          updated_at?: string
+          user_id: string
+          weekly_digest?: boolean
+        }
+        Update: {
+          email_notifications?: boolean
+          theme?: string
+          updated_at?: string
+          user_id?: string
+          weekly_digest?: boolean
         }
         Relationships: []
       }
@@ -94,7 +277,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      ai_daily_limit: { Args: { _uid: string }; Returns: number }
+      current_ai_usage: { Args: { _uid: string }; Returns: number }
+      current_plan: { Args: { _uid: string }; Returns: string }
+      get_app_config: { Args: { _key: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
