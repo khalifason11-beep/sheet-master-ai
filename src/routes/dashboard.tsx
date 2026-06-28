@@ -150,6 +150,29 @@ function DashboardPage() {
                 <Progress value={overallPct} className="mt-3 h-2" />
               </div>
 
+              {usage && (
+                <div className="surface-card p-5">
+                  <div className="flex items-center justify-between">
+                    <h3 className="flex items-center gap-2 font-display font-semibold">
+                      <Bot className="h-4 w-4 text-primary" /> AI Tutor today
+                    </h3>
+                    <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase text-accent-foreground">
+                      {usage.plan}
+                    </span>
+                  </div>
+                  <div className="mt-3 flex items-end justify-between">
+                    <span className="font-display text-3xl font-bold">{usage.remaining}</span>
+                    <span className="text-xs text-muted-foreground">of {usage.limit} messages left</span>
+                  </div>
+                  <Progress value={(usage.used / usage.limit) * 100} className="mt-3 h-2" />
+                  {usage.plan === "free" && usage.remaining <= 3 && (
+                    <p className="mt-3 text-xs text-muted-foreground">
+                      Running low? Premium unlocks {100} messages/day.
+                    </p>
+                  )}
+                </div>
+              )}
+
               <div className="surface-card p-5">
                 <h3 className="font-display font-semibold">Recent activity</h3>
                 {recent.length === 0 ? (
