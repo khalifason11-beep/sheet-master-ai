@@ -5,8 +5,9 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { AITutor } from "@/components/AITutor";
 import { supabase } from "@/integrations/supabase/client";
 import { learningPaths, getLesson } from "@/lib/learning-data";
-import { Flame, Trophy, Target, BookOpen, ArrowRight, Sparkles } from "lucide-react";
+import { Flame, Trophy, Target, BookOpen, ArrowRight, Sparkles, Bot } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { useAiUsage } from "@/hooks/use-ai-usage";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Your Dashboard — Cellow" }] }),
