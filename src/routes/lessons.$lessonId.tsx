@@ -73,6 +73,7 @@ function LessonPage() {
                 <BookmarkButton lessonId={lesson.id} />
                 <span className="hidden rounded-full border border-border bg-card px-3 py-1 text-xs sm:inline">{lesson.duration}</span>
               </div>
+            </div>
           </div>
         </div>
 
