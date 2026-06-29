@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { AITutor } from "@/components/AITutor";
 import { formulas } from "@/lib/learning-data";
 import { ChevronLeft, AlertTriangle, Lightbulb, Link2 } from "lucide-react";
+import { SaveFormulaButton } from "@/components/SaveFormulaButton";
 
 export const Route = createFileRoute("/formulas/$name")({
   loader: ({ params }) => {
@@ -39,6 +40,7 @@ function FormulaPage() {
             </div>
             <p className="mt-3 text-lg text-foreground">{f.purpose}</p>
             <code className="mt-4 block w-full overflow-x-auto rounded-xl border border-border bg-card px-4 py-3 font-mono text-sm shadow-card">{f.syntax}</code>
+            <div className="mt-4"><SaveFormulaButton name={f.name} formula={f.syntax} description={f.purpose} /></div>
           </div>
         </section>
 

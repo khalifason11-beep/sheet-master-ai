@@ -9,6 +9,8 @@ import { getLesson, getPath } from "@/lib/learning-data";
 import { ChevronLeft, Target, AlertTriangle, Lightbulb, Briefcase, CheckCircle2, ArrowRight, Sparkles, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { track } from "@/lib/analytics";
 
 export const Route = createFileRoute("/lessons/$lessonId")({
   loader: ({ params }) => {
