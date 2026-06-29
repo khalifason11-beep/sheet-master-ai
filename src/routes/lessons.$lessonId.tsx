@@ -39,6 +39,7 @@ function LessonPage() {
     if (solved) return;
     setSolved(true);
     toast.success("+50 XP", { description: "Practice solved — nice work!" });
+    track("lesson_completed", { lesson_id: lesson.id, path_id: path.id });
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       await supabase.from("lesson_progress").upsert({
@@ -68,8 +69,10 @@ function LessonPage() {
                 <h1 className="mt-1 font-display text-3xl font-bold tracking-tight sm:text-4xl">{lesson.title}</h1>
                 <p className="mt-2 max-w-2xl text-muted-foreground">{lesson.summary}</p>
               </div>
-              <span className="hidden rounded-full border border-border bg-card px-3 py-1 text-xs sm:inline">{lesson.duration}</span>
-            </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <BookmarkButton lessonId={lesson.id} />
+                <span className="hidden rounded-full border border-border bg-card px-3 py-1 text-xs sm:inline">{lesson.duration}</span>
+              </div>
           </div>
         </div>
 
