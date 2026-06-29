@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAiUsage } from "@/hooks/use-ai-usage";
 import { toast } from "sonner";
+import { track } from "@/lib/analytics";
 
 const transport = new DefaultChatTransport({
   api: "/api/chat",
