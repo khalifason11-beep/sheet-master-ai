@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAiUsage } from "@/hooks/use-ai-usage";
 import { toast } from "sonner";
+import { track } from "@/lib/analytics";
 
 const transport = new DefaultChatTransport({
   api: "/api/chat",
@@ -90,6 +91,7 @@ export function AITutor({ context }: Props) {
       return;
     }
     sendMessage({ text: v });
+    track("ai_message_sent", { length: v.length, context: context ?? null });
     setInput("");
   };
 

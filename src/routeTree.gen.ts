@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PathsRouteImport } from './routes/paths'
+import { Route as LibraryRouteImport } from './routes/library'
 import { Route as FormulasRouteImport } from './routes/formulas'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -21,9 +23,19 @@ import { Route as AuthResetRouteImport } from './routes/auth.reset'
 import { Route as AuthForgotRouteImport } from './routes/auth.forgot'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PathsRoute = PathsRouteImport.update({
   id: '/paths',
   path: '/paths',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FormulasRoute = FormulasRouteImport.update({
@@ -82,7 +94,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
+  '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
@@ -95,7 +109,9 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
+  '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
@@ -109,7 +125,9 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
+  '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
@@ -124,7 +142,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/formulas'
+    | '/library'
     | '/paths'
+    | '/settings'
     | '/api/chat'
     | '/auth/forgot'
     | '/auth/reset'
@@ -137,7 +157,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/formulas'
+    | '/library'
     | '/paths'
+    | '/settings'
     | '/api/chat'
     | '/auth/forgot'
     | '/auth/reset'
@@ -150,7 +172,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/formulas'
+    | '/library'
     | '/paths'
+    | '/settings'
     | '/api/chat'
     | '/auth/forgot'
     | '/auth/reset'
@@ -164,18 +188,34 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   FormulasRoute: typeof FormulasRouteWithChildren
+  LibraryRoute: typeof LibraryRoute
   PathsRoute: typeof PathsRouteWithChildren
+  SettingsRoute: typeof SettingsRoute
   ApiChatRoute: typeof ApiChatRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/paths': {
       id: '/paths'
       path: '/paths'
       fullPath: '/paths'
       preLoaderRoute: typeof PathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/formulas': {
@@ -290,20 +330,12 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRoute,
   FormulasRoute: FormulasRouteWithChildren,
+  LibraryRoute: LibraryRoute,
   PathsRoute: PathsRouteWithChildren,
+  SettingsRoute: SettingsRoute,
   ApiChatRoute: ApiChatRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
