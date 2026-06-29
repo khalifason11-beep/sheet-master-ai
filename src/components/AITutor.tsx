@@ -90,6 +90,7 @@ export function AITutor({ context }: Props) {
       return;
     }
     sendMessage({ text: v });
+    track("ai_message_sent", { length: v.length, context: context ?? null });
     setInput("");
   };
 
