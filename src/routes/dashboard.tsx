@@ -165,10 +165,13 @@ function DashboardPage() {
                     <span className="text-xs text-muted-foreground">of {usage.limit} messages left</span>
                   </div>
                   <Progress value={(usage.used / usage.limit) * 100} className="mt-3 h-2" />
-                  {usage.plan === "free" && usage.remaining <= 3 && (
-                    <p className="mt-3 text-xs text-muted-foreground">
-                      Running low? Premium unlocks {100} messages/day.
-                    </p>
+                  {usage.plan === "free" && (
+                    <Link
+                      to="/pricing"
+                      className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-gradient-brand px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-95"
+                    >
+                      Upgrade for 100/day <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
                   )}
                 </div>
               )}
