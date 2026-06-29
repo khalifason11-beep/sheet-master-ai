@@ -184,8 +184,8 @@ function PricingPage() {
               Every account starts on Free. Try the AI Tutor, complete a lesson, and upgrade only if you need more.
             </p>
             <Button asChild size="lg" className="mt-6 bg-gradient-brand text-primary-foreground hover:opacity-95">
-              <Link to={authed ? "/dashboard" : "/auth"}>
-                {authed ? "Go to dashboard" : "Create your free account"} <ArrowRight className="ml-1.5 h-4 w-4" />
+              <Link to={authed === true ? "/dashboard" : "/auth"}>
+                {authed === true ? "Go to dashboard" : "Create your free account"} <ArrowRight className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
           </div>

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PathsRouteImport } from './routes/paths'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as FormulasRouteImport } from './routes/formulas'
@@ -26,6 +27,11 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PathsRoute = PathsRouteImport.update({
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/formulas': typeof FormulasRouteWithChildren
   '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/settings': typeof SettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/formulas': typeof FormulasRouteWithChildren
   '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/settings': typeof SettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/formulas': typeof FormulasRouteWithChildren
   '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/settings': typeof SettingsRoute
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/formulas'
     | '/library'
     | '/paths'
+    | '/pricing'
     | '/settings'
     | '/api/chat'
     | '/auth/forgot'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/formulas'
     | '/library'
     | '/paths'
+    | '/pricing'
     | '/settings'
     | '/api/chat'
     | '/auth/forgot'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/formulas'
     | '/library'
     | '/paths'
+    | '/pricing'
     | '/settings'
     | '/api/chat'
     | '/auth/forgot'
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   FormulasRoute: typeof FormulasRouteWithChildren
   LibraryRoute: typeof LibraryRoute
   PathsRoute: typeof PathsRouteWithChildren
+  PricingRoute: typeof PricingRoute
   SettingsRoute: typeof SettingsRoute
   ApiChatRoute: typeof ApiChatRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
@@ -202,6 +215,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/paths': {
@@ -332,6 +352,7 @@ const rootRouteChildren: RootRouteChildren = {
   FormulasRoute: FormulasRouteWithChildren,
   LibraryRoute: LibraryRoute,
   PathsRoute: PathsRouteWithChildren,
+  PricingRoute: PricingRoute,
   SettingsRoute: SettingsRoute,
   ApiChatRoute: ApiChatRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
@@ -339,13 +360,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
