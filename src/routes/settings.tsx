@@ -30,7 +30,7 @@ const profileSchema = z.object({
 });
 
 interface Settings { email_notifications: boolean; weekly_digest: boolean; theme: string }
-interface PracticeFile { name: string; size: number; updated_at: string | null }
+interface PracticeFile { name: string; updated_at: string | null }
 
 function SettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ function SettingsPage() {
 
   const loadFiles = async (uid: string) => {
     const { data } = await supabase.storage.from("practice-files").list(uid, { limit: 100, sortBy: { column: "updated_at", order: "desc" } });
-    setFiles((data ?? []) as PracticeFile[]);
+    setFiles(((data ?? []) as unknown) as PracticeFile[]);
   };
 
   useEffect(() => {
