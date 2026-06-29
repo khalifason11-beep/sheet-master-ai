@@ -118,7 +118,7 @@ function PricingPage() {
         <section className="py-16">
           <div className="mx-auto grid max-w-5xl gap-6 px-4 sm:grid-cols-2 sm:px-6">
             {tiers.map((tier) => {
-              const isCurrent = !loading && plan === tier.id && authed;
+              const isCurrent = !loading && plan === tier.id && authed === true;
               return (
                 <div
                   key={tier.id}
