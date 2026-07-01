@@ -13,16 +13,21 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PathsRouteImport } from './routes/paths'
 import { Route as LibraryRouteImport } from './routes/library'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as FormulasRouteImport } from './routes/formulas'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathsPathIdRouteImport } from './routes/paths.$pathId'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons.$lessonId'
+import { Route as LearnCourseSlugRouteImport } from './routes/learn.$courseSlug'
 import { Route as FormulasNameRouteImport } from './routes/formulas.$name'
 import { Route as AuthResetRouteImport } from './routes/auth.reset'
 import { Route as AuthForgotRouteImport } from './routes/auth.forgot'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as LearnCourseSlugLessonSlugRouteImport } from './routes/learn.$courseSlug.$lessonSlug'
+import { Route as AdminCoursesCourseIdRouteImport } from './routes/admin.courses.$courseId'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -44,6 +49,11 @@ const LibraryRoute = LibraryRouteImport.update({
   path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FormulasRoute = FormulasRouteImport.update({
   id: '/formulas',
   path: '/formulas',
@@ -57,6 +67,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -73,6 +88,11 @@ const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
   id: '/lessons/$lessonId',
   path: '/lessons/$lessonId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LearnCourseSlugRoute = LearnCourseSlugRouteImport.update({
+  id: '/$courseSlug',
+  path: '/$courseSlug',
+  getParentRoute: () => LearnRoute,
 } as any)
 const FormulasNameRoute = FormulasNameRouteImport.update({
   id: '/$name',
@@ -94,12 +114,25 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnCourseSlugLessonSlugRoute =
+  LearnCourseSlugLessonSlugRouteImport.update({
+    id: '/$lessonSlug',
+    path: '/$lessonSlug',
+    getParentRoute: () => LearnCourseSlugRoute,
+  } as any)
+const AdminCoursesCourseIdRoute = AdminCoursesCourseIdRouteImport.update({
+  id: '/courses/$courseId',
+  path: '/courses/$courseId',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
+  '/learn': typeof LearnRouteWithChildren
   '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
   '/pricing': typeof PricingRoute
@@ -108,14 +141,19 @@ export interface FileRoutesByFullPath {
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
   '/formulas/$name': typeof FormulasNameRoute
+  '/learn/$courseSlug': typeof LearnCourseSlugRouteWithChildren
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
+  '/admin/courses/$courseId': typeof AdminCoursesCourseIdRoute
+  '/learn/$courseSlug/$lessonSlug': typeof LearnCourseSlugLessonSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
+  '/learn': typeof LearnRouteWithChildren
   '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
   '/pricing': typeof PricingRoute
@@ -124,15 +162,20 @@ export interface FileRoutesByTo {
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
   '/formulas/$name': typeof FormulasNameRoute
+  '/learn/$courseSlug': typeof LearnCourseSlugRouteWithChildren
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
+  '/admin/courses/$courseId': typeof AdminCoursesCourseIdRoute
+  '/learn/$courseSlug/$lessonSlug': typeof LearnCourseSlugLessonSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/formulas': typeof FormulasRouteWithChildren
+  '/learn': typeof LearnRouteWithChildren
   '/library': typeof LibraryRoute
   '/paths': typeof PathsRouteWithChildren
   '/pricing': typeof PricingRoute
@@ -141,16 +184,21 @@ export interface FileRoutesById {
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
   '/formulas/$name': typeof FormulasNameRoute
+  '/learn/$courseSlug': typeof LearnCourseSlugRouteWithChildren
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/paths/$pathId': typeof PathsPathIdRoute
+  '/admin/courses/$courseId': typeof AdminCoursesCourseIdRoute
+  '/learn/$courseSlug/$lessonSlug': typeof LearnCourseSlugLessonSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/auth'
     | '/dashboard'
     | '/formulas'
+    | '/learn'
     | '/library'
     | '/paths'
     | '/pricing'
@@ -159,14 +207,19 @@ export interface FileRouteTypes {
     | '/auth/forgot'
     | '/auth/reset'
     | '/formulas/$name'
+    | '/learn/$courseSlug'
     | '/lessons/$lessonId'
     | '/paths/$pathId'
+    | '/admin/courses/$courseId'
+    | '/learn/$courseSlug/$lessonSlug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/auth'
     | '/dashboard'
     | '/formulas'
+    | '/learn'
     | '/library'
     | '/paths'
     | '/pricing'
@@ -175,14 +228,19 @@ export interface FileRouteTypes {
     | '/auth/forgot'
     | '/auth/reset'
     | '/formulas/$name'
+    | '/learn/$courseSlug'
     | '/lessons/$lessonId'
     | '/paths/$pathId'
+    | '/admin/courses/$courseId'
+    | '/learn/$courseSlug/$lessonSlug'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/auth'
     | '/dashboard'
     | '/formulas'
+    | '/learn'
     | '/library'
     | '/paths'
     | '/pricing'
@@ -191,15 +249,20 @@ export interface FileRouteTypes {
     | '/auth/forgot'
     | '/auth/reset'
     | '/formulas/$name'
+    | '/learn/$courseSlug'
     | '/lessons/$lessonId'
     | '/paths/$pathId'
+    | '/admin/courses/$courseId'
+    | '/learn/$courseSlug/$lessonSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   FormulasRoute: typeof FormulasRouteWithChildren
+  LearnRoute: typeof LearnRouteWithChildren
   LibraryRoute: typeof LibraryRoute
   PathsRoute: typeof PathsRouteWithChildren
   PricingRoute: typeof PricingRoute
@@ -238,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/formulas': {
       id: '/formulas'
       path: '/formulas'
@@ -257,6 +327,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -279,6 +356,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lessons/$lessonId'
       preLoaderRoute: typeof LessonsLessonIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/learn/$courseSlug': {
+      id: '/learn/$courseSlug'
+      path: '/$courseSlug'
+      fullPath: '/learn/$courseSlug'
+      preLoaderRoute: typeof LearnCourseSlugRouteImport
+      parentRoute: typeof LearnRoute
     }
     '/formulas/$name': {
       id: '/formulas/$name'
@@ -308,8 +392,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$courseSlug/$lessonSlug': {
+      id: '/learn/$courseSlug/$lessonSlug'
+      path: '/$lessonSlug'
+      fullPath: '/learn/$courseSlug/$lessonSlug'
+      preLoaderRoute: typeof LearnCourseSlugLessonSlugRouteImport
+      parentRoute: typeof LearnCourseSlugRoute
+    }
+    '/admin/courses/$courseId': {
+      id: '/admin/courses/$courseId'
+      path: '/courses/$courseId'
+      fullPath: '/admin/courses/$courseId'
+      preLoaderRoute: typeof AdminCoursesCourseIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminCoursesCourseIdRoute: typeof AdminCoursesCourseIdRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCoursesCourseIdRoute: AdminCoursesCourseIdRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AuthRouteChildren {
   AuthForgotRoute: typeof AuthForgotRoute
@@ -335,6 +443,28 @@ const FormulasRouteWithChildren = FormulasRoute._addFileChildren(
   FormulasRouteChildren,
 )
 
+interface LearnCourseSlugRouteChildren {
+  LearnCourseSlugLessonSlugRoute: typeof LearnCourseSlugLessonSlugRoute
+}
+
+const LearnCourseSlugRouteChildren: LearnCourseSlugRouteChildren = {
+  LearnCourseSlugLessonSlugRoute: LearnCourseSlugLessonSlugRoute,
+}
+
+const LearnCourseSlugRouteWithChildren = LearnCourseSlugRoute._addFileChildren(
+  LearnCourseSlugRouteChildren,
+)
+
+interface LearnRouteChildren {
+  LearnCourseSlugRoute: typeof LearnCourseSlugRouteWithChildren
+}
+
+const LearnRouteChildren: LearnRouteChildren = {
+  LearnCourseSlugRoute: LearnCourseSlugRouteWithChildren,
+}
+
+const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
+
 interface PathsRouteChildren {
   PathsPathIdRoute: typeof PathsPathIdRoute
 }
@@ -347,9 +477,11 @@ const PathsRouteWithChildren = PathsRoute._addFileChildren(PathsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRoute,
   FormulasRoute: FormulasRouteWithChildren,
+  LearnRoute: LearnRouteWithChildren,
   LibraryRoute: LibraryRoute,
   PathsRoute: PathsRouteWithChildren,
   PricingRoute: PricingRoute,
