@@ -5,10 +5,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { AITutor } from "@/components/AITutor";
 import { supabase } from "@/integrations/supabase/client";
 import { getLesson } from "@/lib/learning-data";
-import { Bookmark, Save, Trash2, ArrowRight, Sparkles } from "lucide-react";
+import { Bookmark, Save, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
+import { PageLoader } from "@/components/PageLoader";
 
 export const Route = createFileRoute("/library")({
   head: () => ({ meta: [{ title: "Your Library — Cellow" }] }),
@@ -53,7 +54,7 @@ function LibraryPage() {
   };
 
   if (loading) {
-    return <div className="flex min-h-dvh items-center justify-center"><Sparkles className="h-6 w-6 animate-pulse text-primary" /></div>;
+    return <PageLoader label="Loading your library" />;
   }
 
   if (!authed) {
