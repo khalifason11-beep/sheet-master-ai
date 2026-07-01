@@ -7,6 +7,7 @@ import { Menu, GraduationCap, LogOut } from "lucide-react";
 
 const nav = [
   { to: "/", label: "Home" },
+  { to: "/learn", label: "Learn" },
   { to: "/paths", label: "Paths" },
   { to: "/formulas", label: "Formulas" },
   { to: "/library", label: "Library" },
