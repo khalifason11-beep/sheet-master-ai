@@ -5,9 +5,10 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { AITutor } from "@/components/AITutor";
 import { supabase } from "@/integrations/supabase/client";
 import { learningPaths, getLesson } from "@/lib/learning-data";
-import { Flame, Trophy, Target, BookOpen, ArrowRight, Sparkles, Bot } from "lucide-react";
+import { Flame, Trophy, Target, BookOpen, ArrowRight, Bot } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useAiUsage } from "@/hooks/use-ai-usage";
+import { PageLoader } from "@/components/PageLoader";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Your Dashboard — Cellow" }] }),
@@ -47,7 +48,7 @@ function DashboardPage() {
   }, []);
 
   if (loading) {
-    return <div className="flex min-h-dvh items-center justify-center"><Sparkles className="h-6 w-6 animate-pulse text-primary" /></div>;
+    return <PageLoader label="Loading your dashboard" />;
   }
 
   if (!profile) {
