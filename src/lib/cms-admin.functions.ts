@@ -168,9 +168,10 @@ export const upsertLesson = createServerFn({ method: "POST" })
   }) => d)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
+    const payload = { ...data, content: (data.content ?? []) as any };
     const { data: row, error } = await context.supabase
       .from("lessons")
-      .upsert(data, { onConflict: "id" })
+      .upsert(payload, { onConflict: "id" })
       .select()
       .single();
     if (error) throw new Error(error.message);
@@ -219,7 +220,13 @@ export const markLessonComplete = createServerFn({ method: "POST" })
     );
     if (error) throw new Error(error.message);
     if (data.xp && data.xp > 0) {
-      await context.supabase.rpc("increment_xp", { _uid: context.userId, _xp: data.xp }).catch(() => {});
+      const { data: prof } = await context.supabase
+        .from("profiles")
+        .select("xp")
+        .eq("id", context.userId)
+        .maybeSingle();
+      const current = (prof as { xp?: number } | null)?.xp ?? 0;
+      await context.supabase.from("profiles").update({ xp: current + data.xp }).eq("id", context.userId);
     }
     return { ok: true };
   });

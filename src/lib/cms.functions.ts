@@ -43,16 +43,17 @@ export const getCourseBySlug = createServerFn({ method: "GET" })
       .order("sort_order");
 
     const moduleIds = (modules ?? []).map((m) => m.id);
-    const { data: lessons } = moduleIds.length
-      ? await sb
-          .from("lessons")
-          .select("id, module_id, slug, title, summary, estimated_min, xp_reward, sort_order")
-          .in("module_id", moduleIds)
-          .eq("status", "published")
-          .order("sort_order")
-      : { data: [] as unknown[] };
-
-    return { course, modules: modules ?? [], lessons: lessons ?? [] };
+    let lessons: any[] = [];
+    if (moduleIds.length) {
+      const { data: l } = await sb
+        .from("lessons")
+        .select("id, module_id, slug, title, summary, estimated_min, xp_reward, sort_order")
+        .in("module_id", moduleIds)
+        .eq("status", "published")
+        .order("sort_order");
+      lessons = (l ?? []) as any[];
+    }
+    return { course: course as any, modules: (modules ?? []) as any[], lessons };
   });
 
 export const getLessonBySlug = createServerFn({ method: "GET" })
