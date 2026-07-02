@@ -6,9 +6,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 async function assertAdmin(ctx: { supabase: any; userId: string }) {
+  // Only Super Admins may access CMS mutations. Server-side re-check on every call.
   const { data, error } = await ctx.supabase.rpc("has_role", {
     _user_id: ctx.userId,
-    _role: "admin",
+    _role: "super_admin",
   });
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Forbidden");
