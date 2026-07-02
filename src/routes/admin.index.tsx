@@ -104,7 +104,7 @@ function AdminIndex() {
                     variant="ghost"
                     onClick={async () => {
                       const next = c.status === "published" ? "draft" : "published";
-                      await upsert({ data: { ...(c as never), status: next } });
+                      await upsert({ data: { ...(c as Record<string, unknown>), status: next } as never });
                       qc.invalidateQueries({ queryKey: ["admin", "courses"] });
                     }}
                   >{c.status === "published" ? "Unpublish" : "Publish"}</Button>

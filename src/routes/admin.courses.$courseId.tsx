@@ -24,9 +24,9 @@ export const Route = createFileRoute("/admin/courses/$courseId")({
 
 function ManageCoursePage() {
   const { courseId } = Route.useParams();
-  const { loading, isAdmin } = useIsAdmin();
-  // Silently bounce non-super-admins away from the admin subtree.
-  if (!loading && !isAdmin && typeof window !== "undefined") {
+  const { loading, canWrite } = useIsAdmin();
+  // Silently bounce anyone without CMS write access.
+  if (!loading && !canWrite && typeof window !== "undefined") {
     window.location.replace("/");
   }
   const qc = useQueryClient();
