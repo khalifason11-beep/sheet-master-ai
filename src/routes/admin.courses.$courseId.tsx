@@ -37,13 +37,13 @@ function ManageCoursePage() {
   const { data: modules, isLoading } = useQuery({
     queryKey: ["admin", "modules", courseId],
     queryFn: () => listMods({ data: { courseId } as any }),
-    enabled: isAdmin,
+    enabled: canWrite,
   });
 
   const [newMod, setNewMod] = useState({ slug: "", title: "" });
 
   if (loading) return <PageLoader label="Checking access" />;
-  if (!isAdmin) return (
+  if (!canWrite) return (
     <div className="min-h-dvh bg-background">
       <SiteHeader />
       <main className="mx-auto max-w-md py-16 text-center">
