@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PageLoader } from "@/components/PageLoader";
-import { useIsAdmin } from "@/hooks/use-is-admin";
+import { useIsAdmin, useSuperAdminExists } from "@/hooks/use-is-admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
