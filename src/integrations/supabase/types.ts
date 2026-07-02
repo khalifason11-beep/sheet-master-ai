@@ -149,10 +149,13 @@ export type Database = {
           difficulty: Database["public"]["Enums"]["difficulty_level"]
           estimated_min: number
           id: string
+          prerequisite_course_id: string | null
           published_at: string | null
+          scheduled_publish_at: string | null
           slug: string
           sort_order: number
           status: Database["public"]["Enums"]["content_status"]
+          thumbnail_path: string | null
           title: string
           updated_at: string
           xp_reward: number
@@ -166,10 +169,13 @@ export type Database = {
           difficulty?: Database["public"]["Enums"]["difficulty_level"]
           estimated_min?: number
           id?: string
+          prerequisite_course_id?: string | null
           published_at?: string | null
+          scheduled_publish_at?: string | null
           slug: string
           sort_order?: number
           status?: Database["public"]["Enums"]["content_status"]
+          thumbnail_path?: string | null
           title: string
           updated_at?: string
           xp_reward?: number
@@ -183,15 +189,26 @@ export type Database = {
           difficulty?: Database["public"]["Enums"]["difficulty_level"]
           estimated_min?: number
           id?: string
+          prerequisite_course_id?: string | null
           published_at?: string | null
+          scheduled_publish_at?: string | null
           slug?: string
           sort_order?: number
           status?: Database["public"]["Enums"]["content_status"]
+          thumbnail_path?: string | null
           title?: string
           updated_at?: string
           xp_reward?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "courses_prerequisite_course_id_fkey"
+            columns: ["prerequisite_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       downloadable_resources: {
         Row: {
@@ -253,6 +270,59 @@ export type Database = {
             columns: ["module_id"]
             isOneToOne: false
             referencedRelation: "modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exercises: {
+        Row: {
+          created_at: string
+          difficulty: Database["public"]["Enums"]["difficulty_level"]
+          expected_outcome: string | null
+          file_path: string | null
+          hints: string[]
+          id: string
+          instructions: string | null
+          lesson_id: string
+          sort_order: number
+          status: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty?: Database["public"]["Enums"]["difficulty_level"]
+          expected_outcome?: string | null
+          file_path?: string | null
+          hints?: string[]
+          id?: string
+          instructions?: string | null
+          lesson_id: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: Database["public"]["Enums"]["difficulty_level"]
+          expected_outcome?: string | null
+          file_path?: string | null
+          hints?: string[]
+          id?: string
+          instructions?: string | null
+          lesson_id?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["content_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercises_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
             referencedColumns: ["id"]
           },
         ]
@@ -414,6 +484,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      media_assets: {
+        Row: {
+          alt: string | null
+          bucket: string
+          created_at: string
+          id: string
+          kind: string
+          mime: string | null
+          original_name: string | null
+          owner_id: string | null
+          size_bytes: number | null
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          alt?: string | null
+          bucket: string
+          created_at?: string
+          id?: string
+          kind?: string
+          mime?: string | null
+          original_name?: string | null
+          owner_id?: string | null
+          size_bytes?: number | null
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          alt?: string | null
+          bucket?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          mime?: string | null
+          original_name?: string | null
+          owner_id?: string | null
+          size_bytes?: number | null
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       modules: {
         Row: {
@@ -787,6 +899,7 @@ export type Database = {
       current_ai_usage: { Args: { _uid: string }; Returns: number }
       current_plan: { Args: { _uid: string }; Returns: string }
       get_app_config: { Args: { _key: string }; Returns: Json }
+      has_cms_write: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
