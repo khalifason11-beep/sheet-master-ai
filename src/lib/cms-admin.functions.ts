@@ -49,6 +49,9 @@ export const upsertCourse = createServerFn({ method: "POST" })
     estimated_min?: number;
     xp_reward?: number;
     cover_url?: string | null;
+    thumbnail_path?: string | null;
+    prerequisite_course_id?: string | null;
+    scheduled_publish_at?: string | null;
     status?: "draft" | "published" | "archived";
     sort_order?: number;
   }) => d)
