@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+type RoleState = {
+  loading: boolean;
+  userId: string | null;
+  isSuperAdmin: boolean;
+  isAdmin: boolean;   // super_admin OR admin
+  canWrite: boolean;  // editor, admin, or super_admin
+  roles: string[];
+};
+
 /**
- * Client-side check for Super Admin access.
- * The server always re-verifies via has_role() — this is only for UI gating.
+ * Client-side role check. Server ALWAYS re-verifies via has_role() /
+ * has_cms_write() — this is only for UI gating.
  */
 export function useIsAdmin() {
-  const [state, setState] = useState<{ loading: boolean; isAdmin: boolean; userId: string | null }>({
-    loading: true,
-    isAdmin: false,
-    userId: null,
+  const [state, setState] = useState<RoleState>({
+    loading: true, userId: null, isSuperAdmin: false, isAdmin: false, canWrite: false, roles: [],
   });
 
   useEffect(() => {
@@ -18,32 +25,28 @@ export function useIsAdmin() {
       const { data: userData } = await supabase.auth.getUser();
       const uid = userData.user?.id ?? null;
       if (!uid) {
-        if (alive) setState({ loading: false, isAdmin: false, userId: null });
+        if (alive) setState({ loading: false, userId: null, isSuperAdmin: false, isAdmin: false, canWrite: false, roles: [] });
         return;
       }
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("user_roles" as never)
         .select("role")
-        .eq("user_id", uid)
-        .eq("role", "super_admin")
-        .maybeSingle();
-      if (alive) setState({ loading: false, isAdmin: !error && !!data, userId: uid });
+        .eq("user_id", uid);
+      const roles = ((data ?? []) as { role: string }[]).map((r) => r.role);
+      const isSuperAdmin = roles.includes("super_admin");
+      const isAdmin = isSuperAdmin || roles.includes("admin");
+      const canWrite = isAdmin || roles.includes("editor");
+      if (alive) setState({ loading: false, userId: uid, isSuperAdmin, isAdmin, canWrite, roles });
     }
     check();
     const { data: sub } = supabase.auth.onAuthStateChange(() => check());
-    return () => {
-      alive = false;
-      sub.subscription.unsubscribe();
-    };
+    return () => { alive = false; sub.subscription.unsubscribe(); };
   }, []);
 
   return state;
 }
 
-/**
- * Detects whether a super_admin exists anywhere in the system.
- * Used to reveal the one-time "claim" UI on a fresh install.
- */
+/** Detects whether a super_admin exists anywhere — used to reveal the one-time claim UI. */
 export function useSuperAdminExists() {
   const [state, setState] = useState<{ loading: boolean; exists: boolean }>({ loading: true, exists: true });
   useEffect(() => {

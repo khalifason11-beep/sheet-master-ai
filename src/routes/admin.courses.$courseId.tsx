@@ -24,9 +24,9 @@ export const Route = createFileRoute("/admin/courses/$courseId")({
 
 function ManageCoursePage() {
   const { courseId } = Route.useParams();
-  const { loading, isAdmin } = useIsAdmin();
-  // Silently bounce non-super-admins away from the admin subtree.
-  if (!loading && !isAdmin && typeof window !== "undefined") {
+  const { loading, canWrite } = useIsAdmin();
+  // Silently bounce anyone without CMS write access.
+  if (!loading && !canWrite && typeof window !== "undefined") {
     window.location.replace("/");
   }
   const qc = useQueryClient();
@@ -37,13 +37,13 @@ function ManageCoursePage() {
   const { data: modules, isLoading } = useQuery({
     queryKey: ["admin", "modules", courseId],
     queryFn: () => listMods({ data: { courseId } as any }),
-    enabled: isAdmin,
+    enabled: canWrite,
   });
 
   const [newMod, setNewMod] = useState({ slug: "", title: "" });
 
   if (loading) return <PageLoader label="Checking access" />;
-  if (!isAdmin) return (
+  if (!canWrite) return (
     <div className="min-h-dvh bg-background">
       <SiteHeader />
       <main className="mx-auto max-w-md py-16 text-center">
