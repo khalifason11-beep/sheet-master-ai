@@ -28,14 +28,20 @@ function AdminPage() {
   const router = useRouter();
   const qc = useQueryClient();
   const { loading, isAdmin, userId } = useIsAdmin();
+  const { loading: loadingExists, exists: superAdminExists } = useSuperAdminExists();
   const list = useServerFn(adminListCourses);
   const upsert = useServerFn(upsertCourse);
   const del = useServerFn(deleteCourse);
   const claim = useServerFn(claimFirstAdmin);
 
+  // Hard gate: signed-out users → /auth. Signed-in non-super-admins on an
+  // already-provisioned system → silently bounced to home. The admin surface
+  // is hidden — no error page, no clue it exists.
   useEffect(() => {
-    if (!loading && !userId) router.navigate({ to: "/auth" });
-  }, [loading, userId, router]);
+    if (loading || loadingExists) return;
+    if (!userId) { router.navigate({ to: "/auth" }); return; }
+    if (!isAdmin && superAdminExists) { router.navigate({ to: "/" }); return; }
+  }, [loading, loadingExists, userId, isAdmin, superAdminExists, router]);
 
   const [form, setForm] = useState({ slug: "", title: "", description: "", category: "", difficulty: "beginner" as const, estimated_min: 30, xp_reward: 50 });
   const [creating, setCreating] = useState(false);
@@ -46,34 +52,39 @@ function AdminPage() {
     enabled: isAdmin,
   });
 
-  if (loading) return <PageLoader label="Checking access" />;
+  if (loading || loadingExists) return <PageLoader label="Checking access" />;
 
-  if (!isAdmin) {
+  // Fresh install: no super_admin yet — allow the signed-in user to claim it.
+  if (!isAdmin && !superAdminExists && userId) {
     return (
       <div className="min-h-dvh bg-background">
         <SiteHeader />
         <main className="mx-auto max-w-md px-4 py-16 text-center">
           <Shield className="mx-auto h-10 w-10 text-muted-foreground" />
-          <h1 className="mt-4 font-display text-2xl font-bold">Admin access required</h1>
+          <h1 className="mt-4 font-display text-2xl font-bold">Claim Super Admin</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            You are not an administrator. If this is a brand-new installation and no admin exists yet, you can claim the first admin role now.
+            No Super Admin exists yet. Claim the role now to bootstrap the platform. This can only be done once.
           </p>
           <Button
             className="mt-6"
             onClick={async () => {
               try {
                 const r = await claim();
-                if ((r as any).claimed) { toast.success("You are now the admin."); window.location.reload(); }
-                else toast.error("An admin already exists.");
+                if ((r as any).claimed) { toast.success("You are the Super Admin."); window.location.reload(); }
+                else toast.error("A Super Admin already exists.");
               } catch (e: any) { toast.error(e.message ?? "Failed"); }
             }}
           >
-            Claim first admin
+            Claim Super Admin
           </Button>
         </main>
       </div>
     );
   }
+
+  // While the redirect effect runs, render nothing so unauthorized users
+  // never see the admin UI, even for a frame.
+  if (!isAdmin) return null;
 
   return (
     <div className="min-h-dvh bg-background">

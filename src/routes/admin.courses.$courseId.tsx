@@ -25,6 +25,10 @@ export const Route = createFileRoute("/admin/courses/$courseId")({
 function ManageCoursePage() {
   const { courseId } = Route.useParams();
   const { loading, isAdmin } = useIsAdmin();
+  // Silently bounce non-super-admins away from the admin subtree.
+  if (!loading && !isAdmin && typeof window !== "undefined") {
+    window.location.replace("/");
+  }
   const qc = useQueryClient();
   const listMods = useServerFn(adminListModules);
   const upMod = useServerFn(upsertModule);
