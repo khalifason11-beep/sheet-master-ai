@@ -1,19 +1,19 @@
 /**
- * Admin-only CMS server functions. Every handler verifies the caller is an admin
- * via has_role() before mutating.
+ * CMS server functions. Content mutations require an editor/admin/super_admin
+ * role (has_cms_write). System-level operations (roles, app settings) require
+ * super_admin. Every handler re-verifies role server-side before mutating.
  */
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertAdmin(ctx: { supabase: any; userId: string }) {
-  // Only Super Admins may access CMS mutations. Server-side re-check on every call.
-  const { data, error } = await ctx.supabase.rpc("has_role", {
-    _user_id: ctx.userId,
-    _role: "super_admin",
-  });
+async function assertCmsWriter(ctx: { supabase: any; userId: string }) {
+  const { data, error } = await ctx.supabase.rpc("has_cms_write", { _user_id: ctx.userId });
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Forbidden");
 }
+
+// Alias so all existing call sites keep working. Content writers include editors.
+const assertAdmin = assertCmsWriter;
 
 // ---- Bootstrap ----
 export const claimFirstAdmin = createServerFn({ method: "POST" })
