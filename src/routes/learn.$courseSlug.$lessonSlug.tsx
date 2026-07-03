@@ -68,9 +68,9 @@ function LessonPage() {
           </div>
         ) : null}
 
-        <article className="prose prose-sm max-w-none dark:prose-invert">
-          {blocks.map(renderBlock)}
-        </article>
+        <div className="mt-6">
+          <LessonContentView content={lesson.content} />
+        </div>
 
         <div className="mt-10 flex items-center justify-between border-t pt-6">
           {prev ? (
