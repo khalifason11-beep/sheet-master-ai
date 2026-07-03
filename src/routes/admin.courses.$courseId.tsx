@@ -191,7 +191,7 @@ function ModuleBlock({
                     } });
                     setNl({ slug: "", title: "", summary: "" });
                     qc.invalidateQueries({ queryKey: ["admin", "lessons", m.id] });
-                    toast.success("Lesson created — rich editor ships in Phase 5C");
+                    toast.success("Lesson created — open Edit to write content");
                   }}
                 ><Plus className="mr-1 h-4 w-4" /> Add lesson</Button>
               </div>
@@ -223,6 +223,9 @@ function LessonRowUI({
           </div>
           <div className="truncate text-xs text-muted-foreground">/{l.slug} · {l.xp_reward} XP</div>
         </div>
+        <Button size="sm" variant="outline" asChild>
+          <Link to="/admin/lessons/$lessonId" params={{ lessonId: l.id }}>Edit</Link>
+        </Button>
         <Button size="sm" variant="ghost" onClick={() => setOpenExercises((v) => !v)}>
           <Dumbbell className="mr-1 h-3 w-3" /> Exercises
         </Button>
