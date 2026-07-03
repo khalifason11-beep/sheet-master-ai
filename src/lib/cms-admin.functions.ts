@@ -380,11 +380,12 @@ export const adminGetQuiz = createServerFn({ method: "GET" })
     const { data: questions } = await context.supabase
       .from("quiz_questions").select("*").eq("quiz_id", data.id).order("sort_order");
     const qIds = (questions ?? []).map((q: { id: string }) => q.id);
-    let answers: unknown[] = [];
+    type AnswerRow = { id: string; question_id: string; text: string; is_correct: boolean; sort_order: number };
+    let answers: AnswerRow[] = [];
     if (qIds.length) {
       const { data: a } = await context.supabase
         .from("quiz_answers").select("*").in("question_id", qIds).order("sort_order");
-      answers = a ?? [];
+      answers = (a ?? []) as AnswerRow[];
     }
     return { quiz, questions: questions ?? [], answers };
   });
