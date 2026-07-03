@@ -26,7 +26,7 @@ export const Route = createFileRoute("/admin/courses/$courseId")({
 
 type ModuleRow = { id: string; course_id: string; slug: string; title: string; status: string; sort_order: number };
 type LessonRow = { id: string; module_id: string; slug: string; title: string; status: string; xp_reward: number };
-type ExerciseRow = { id: string; lesson_id: string; title: string; instructions: string | null; difficulty: string; status: string };
+type ExerciseRow = { id: string; lesson_id: string; title: string; instructions: string | null; difficulty: "beginner" | "intermediate" | "advanced"; status: "draft" | "published" | "archived" };
 
 function ManageCoursePage() {
   const { courseId } = Route.useParams();
