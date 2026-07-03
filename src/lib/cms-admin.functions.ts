@@ -352,3 +352,113 @@ export const signMediaUrl = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { url: signed.signedUrl };
   });
+
+// ---- Quizzes ----
+type QuestionKind = "multiple_choice" | "multiple_select" | "true_false" | "short_answer";
+
+export const adminListQuizzes = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { lessonId?: string; courseId?: string } = {}) => d)
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    let q = context.supabase.from("quizzes").select("*").order("created_at", { ascending: false });
+    if (data.lessonId) q = q.eq("lesson_id", data.lessonId);
+    if (data.courseId) q = q.eq("course_id", data.courseId);
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const adminGetQuiz = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => ({ id: String(d.id) }))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { data: quiz, error } = await context.supabase.from("quizzes").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!quiz) return null;
+    const { data: questions } = await context.supabase
+      .from("quiz_questions").select("*").eq("quiz_id", data.id).order("sort_order");
+    const qIds = (questions ?? []).map((q: { id: string }) => q.id);
+    let answers: unknown[] = [];
+    if (qIds.length) {
+      const { data: a } = await context.supabase
+        .from("quiz_answers").select("*").in("question_id", qIds).order("sort_order");
+      answers = a ?? [];
+    }
+    return { quiz, questions: questions ?? [], answers };
+  });
+
+export const upsertQuiz = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: {
+    id?: string;
+    lesson_id?: string | null;
+    course_id?: string | null;
+    title: string;
+    description?: string | null;
+    pass_score?: number;
+    xp_reward?: number;
+    status?: "draft" | "published" | "archived";
+  }) => d)
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { data: row, error } = await context.supabase
+      .from("quizzes").upsert(data, { onConflict: "id" }).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const deleteQuiz = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => ({ id: String(d.id) }))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { error } = await context.supabase.from("quizzes").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const saveQuestion = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: {
+    id?: string;
+    quiz_id: string;
+    kind: QuestionKind;
+    prompt: string;
+    explanation?: string | null;
+    points?: number;
+    sort_order?: number;
+    answers: { id?: string; text: string; is_correct: boolean; sort_order?: number }[];
+  }) => d)
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { answers, ...q } = data;
+    const { data: qRow, error } = await context.supabase
+      .from("quiz_questions").upsert(q, { onConflict: "id" }).select().single();
+    if (error) throw new Error(error.message);
+    // Replace answers atomically.
+    await context.supabase.from("quiz_answers").delete().eq("question_id", qRow.id);
+    if (answers.length) {
+      const payload = answers.map((a, i) => ({
+        question_id: qRow.id,
+        text: a.text,
+        is_correct: a.is_correct,
+        sort_order: a.sort_order ?? i,
+      }));
+      const { error: aErr } = await context.supabase.from("quiz_answers").insert(payload);
+      if (aErr) throw new Error(aErr.message);
+    }
+    return qRow;
+  });
+
+export const deleteQuestion = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => ({ id: String(d.id) }))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { error } = await context.supabase.from("quiz_questions").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
