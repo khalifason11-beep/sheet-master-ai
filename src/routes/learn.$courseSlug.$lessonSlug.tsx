@@ -16,26 +16,7 @@ export const Route = createFileRoute("/learn/$courseSlug/$lessonSlug")({
   component: LessonPage,
 });
 
-interface Block { type: string; text?: string; url?: string; items?: string[]; language?: string; }
-
-function renderBlock(b: Block, i: number) {
-  switch (b.type) {
-    case "heading": return <h2 key={i} className="mt-6 font-display text-xl font-semibold">{b.text}</h2>;
-    case "paragraph": return <p key={i} className="mt-3 leading-relaxed">{b.text}</p>;
-    case "bullet_list": return <ul key={i} className="mt-3 list-disc space-y-1 pl-6">{b.items?.map((it, j) => <li key={j}>{it}</li>)}</ul>;
-    case "numbered_list": return <ol key={i} className="mt-3 list-decimal space-y-1 pl-6">{b.items?.map((it, j) => <li key={j}>{it}</li>)}</ol>;
-    case "quote": return <blockquote key={i} className="mt-4 border-l-4 border-primary/40 pl-4 italic text-muted-foreground">{b.text}</blockquote>;
-    case "callout": case "tip": case "warning":
-      return <div key={i} className="mt-4 rounded-xl border bg-accent/40 p-4 text-sm">{b.text}</div>;
-    case "code": case "formula":
-      return <pre key={i} className="mt-3 overflow-x-auto rounded-lg bg-muted p-3 font-mono text-sm">{b.text}</pre>;
-    case "image": return b.url ? <img key={i} src={b.url} alt="" className="mt-4 rounded-lg" /> : null;
-    case "video":
-      return b.url ? <div key={i} className="mt-4 aspect-video"><iframe src={b.url} className="h-full w-full rounded-lg" allowFullScreen /></div> : null;
-    case "divider": return <hr key={i} className="my-6" />;
-    default: return null;
-  }
-}
+import { LessonContentView } from "@/components/LessonContentView";
 
 function LessonPage() {
   const { courseSlug, lessonSlug } = Route.useParams();
@@ -71,7 +52,6 @@ function LessonPage() {
   );
 
   const { lesson, prev, next } = data as any;
-  const blocks: Block[] = Array.isArray(lesson.content) ? lesson.content : [];
 
   return (
     <div className="min-h-dvh bg-background">
