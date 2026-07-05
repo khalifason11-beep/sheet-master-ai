@@ -91,7 +91,7 @@ export const submitQuiz = createServerFn({ method: "POST" })
       } else if (q.kind === "multiple_choice" || q.kind === "true_false") {
         const picked = sub.answer_ids?.[0];
         correct = !!picked && correctAnswers.some((a) => a.id === picked);
-      } else if (q.kind === "multi_select") {
+      } else if (q.kind === "multiple_select") {
         const picked = new Set(sub.answer_ids ?? []);
         const correctIds = new Set(correctAnswers.map((a) => a.id));
         correct =
@@ -114,7 +114,7 @@ export const submitQuiz = createServerFn({ method: "POST" })
       score,
       max_score: max,
       passed,
-      answers: data.answers as unknown as object,
+      answers: data.answers as unknown as never,
     });
 
     // Award XP once (first passing attempt)
