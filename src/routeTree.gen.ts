@@ -24,6 +24,7 @@ import { Route as PathsPathIdRouteImport } from './routes/paths.$pathId'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons.$lessonId'
 import { Route as LearnCourseSlugRouteImport } from './routes/learn.$courseSlug'
 import { Route as FormulasNameRouteImport } from './routes/formulas.$name'
+import { Route as CertificatesSerialRouteImport } from './routes/certificates.$serial'
 import { Route as AuthResetRouteImport } from './routes/auth.reset'
 import { Route as AuthForgotRouteImport } from './routes/auth.forgot'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
@@ -117,6 +118,11 @@ const FormulasNameRoute = FormulasNameRouteImport.update({
   id: '/$name',
   path: '/$name',
   getParentRoute: () => FormulasRoute,
+} as any)
+const CertificatesSerialRoute = CertificatesSerialRouteImport.update({
+  id: '/certificates/$serial',
+  path: '/certificates/$serial',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthResetRoute = AuthResetRouteImport.update({
   id: '/reset',
@@ -235,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
+  '/certificates/$serial': typeof CertificatesSerialRoute
   '/formulas/$name': typeof FormulasNameRoute
   '/learn/$courseSlug': typeof LearnCourseSlugRouteWithChildren
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
+  '/certificates/$serial': typeof CertificatesSerialRoute
   '/formulas/$name': typeof FormulasNameRoute
   '/learn/$courseSlug': typeof LearnCourseSlugRouteWithChildren
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/api/chat': typeof ApiChatRoute
   '/auth/forgot': typeof AuthForgotRoute
   '/auth/reset': typeof AuthResetRoute
+  '/certificates/$serial': typeof CertificatesSerialRoute
   '/formulas/$name': typeof FormulasNameRoute
   '/learn/$courseSlug': typeof LearnCourseSlugRouteWithChildren
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/auth/forgot'
     | '/auth/reset'
+    | '/certificates/$serial'
     | '/formulas/$name'
     | '/learn/$courseSlug'
     | '/lessons/$lessonId'
@@ -376,6 +386,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/auth/forgot'
     | '/auth/reset'
+    | '/certificates/$serial'
     | '/formulas/$name'
     | '/learn/$courseSlug'
     | '/lessons/$lessonId'
@@ -411,6 +422,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/auth/forgot'
     | '/auth/reset'
+    | '/certificates/$serial'
     | '/formulas/$name'
     | '/learn/$courseSlug'
     | '/lessons/$lessonId'
@@ -434,6 +446,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   SettingsRoute: typeof SettingsRoute
   ApiChatRoute: typeof ApiChatRoute
+  CertificatesSerialRoute: typeof CertificatesSerialRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
 }
 
@@ -543,6 +556,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/formulas/$name'
       preLoaderRoute: typeof FormulasNameRouteImport
       parentRoute: typeof FormulasRoute
+    }
+    '/certificates/$serial': {
+      id: '/certificates/$serial'
+      path: '/certificates/$serial'
+      fullPath: '/certificates/$serial'
+      preLoaderRoute: typeof CertificatesSerialRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/reset': {
       id: '/auth/reset'
@@ -809,6 +829,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   SettingsRoute: SettingsRoute,
   ApiChatRoute: ApiChatRoute,
+  CertificatesSerialRoute: CertificatesSerialRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
 }
 export const routeTree = rootRouteImport

@@ -17,6 +17,7 @@ export const Route = createFileRoute("/learn/$courseSlug/$lessonSlug")({
 });
 
 import { LessonContentView } from "@/components/LessonContentView";
+import { QuizRunner } from "@/components/QuizRunner";
 
 function LessonPage() {
   const { courseSlug, lessonSlug } = Route.useParams();
@@ -71,6 +72,8 @@ function LessonPage() {
         <div className="mt-6">
           <LessonContentView content={lesson.content} />
         </div>
+
+        <QuizRunner lessonId={lesson.id} />
 
         <div className="mt-10 flex items-center justify-between border-t pt-6">
           {prev ? (
