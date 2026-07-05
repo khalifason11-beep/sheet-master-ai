@@ -73,6 +73,8 @@ function LessonPage() {
           <LessonContentView content={lesson.content} />
         </div>
 
+        <QuizRunner lessonId={lesson.id} />
+
         <div className="mt-10 flex items-center justify-between border-t pt-6">
           {prev ? (
             <Button asChild variant="outline"><Link to="/learn/$courseSlug/$lessonSlug" params={{ courseSlug, lessonSlug: prev.slug }}><ArrowLeft className="mr-1 h-4 w-4" /> Previous</Link></Button>
