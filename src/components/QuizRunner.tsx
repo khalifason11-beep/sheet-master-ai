@@ -26,7 +26,7 @@ export function QuizRunner({ lessonId }: { lessonId: string }) {
   const { quiz, questions, answers: options } = data;
 
   const setPick = (qid: string, patch: Partial<SubmittedAnswer>) =>
-    setAnswers((s) => ({ ...s, [qid]: { question_id: qid, ...s[qid], ...patch } }));
+    setAnswers((s) => ({ ...s, [qid]: { ...s[qid], ...patch, question_id: qid } }));
 
   const handleSubmit = async () => {
     const { data: u } = await supabase.auth.getUser();
