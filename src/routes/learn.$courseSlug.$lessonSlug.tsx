@@ -17,6 +17,7 @@ export const Route = createFileRoute("/learn/$courseSlug/$lessonSlug")({
 });
 
 import { LessonContentView } from "@/components/LessonContentView";
+import { QuizRunner } from "@/components/QuizRunner";
 
 function LessonPage() {
   const { courseSlug, lessonSlug } = Route.useParams();
