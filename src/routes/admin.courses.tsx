@@ -1,6 +1,8 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-// The Dashboard already lists and manages courses. Alias /admin/courses → /admin.
+// Layout for /admin/courses/*. Must render <Outlet /> so child routes like
+// /admin/courses/$courseId can mount. The bare /admin/courses index is
+// aliased to the dashboard in admin.courses.index.tsx.
 export const Route = createFileRoute("/admin/courses")({
-  beforeLoad: () => { throw redirect({ to: "/admin" }); },
+  component: () => <Outlet />,
 });
