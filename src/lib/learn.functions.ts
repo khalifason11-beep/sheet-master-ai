@@ -125,7 +125,8 @@ export const submitQuiz = createServerFn({ method: "POST" })
         .eq("user_id", context.userId)
         .eq("quiz_id", quiz.id)
         .eq("passed", true);
-      if ((prior?.length ?? 0) <= 1) {
+      // prior includes the attempt we just inserted; award XP only when this is the first passed row
+      if ((prior?.length ?? 0) === 1) {
         // Atomically increment XP using increment_profile_xp RPC (uses auth.uid() internally)
         const { error: rpcErr } = await context.supabase.rpc("increment_profile_xp", {
           _xp: quiz.xp_reward ?? 0,
