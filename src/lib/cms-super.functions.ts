@@ -8,7 +8,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 async function assertSuperAdmin(ctx: { supabase: any; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("is_super_admin", { _user_id: ctx.userId });
+  // Use the service-role client to call this RPC because the database
+  // explicitly grants EXECUTE only to the service role (see migrations).
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin.rpc("is_super_admin", { _user_id: ctx.userId });
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Forbidden");
 }
@@ -193,8 +196,7 @@ export const adminGetAiUsage = createServerFn({ method: "GET" })
     };
   });
 
-// ---- Subscriptions ----
-export const adminListSubscriptions = createServerFn({ method: "GET" })
+// ---- Subscriptions ----nexport const adminListSubscriptions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertSuperAdmin(context);
