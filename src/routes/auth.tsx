@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+// NOTE: We keep the Lovable integration file in the repo for rollback, but
+// initiate Google OAuth using Supabase directly from the client.
 import { toast } from "sonner";
 import { GraduationCap, Loader2 } from "lucide-react";
 
@@ -66,15 +67,20 @@ function AuthPage() {
 
   const handleGoogle = async () => {
     setLoading(true);
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (result.error) {
-      toast.error("Google sign-in failed");
+    try {
+      // Initiate Supabase native OAuth flow and redirect to our callback route
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
+      });
+      // The SDK initiates a full-page redirect, so we don't handle the
+      // post-sign-in navigation here. If the SDK returns without redirecting
+      // it will also set the session and the onAuthStateChange listener will
+      // navigate to dashboard via normal flow.
+    } catch (err: any) {
+      toast.error(err?.message || "Google sign-in failed");
       setLoading(false);
-      return;
     }
-    if (result.redirected) return;
-    router.invalidate();
-    navigate({ to: "/dashboard" });
   };
 
   return (
@@ -91,7 +97,7 @@ function AuthPage() {
           </div>
 
           <div className="mt-8 surface-card p-6">
-            <Tabs value={tab} onValueChange={(v) => setTab(v as "signin" | "signup")}>
+            <Tabs value={tab} onValueChange={(v) => setTab(v as "signin" | "signup")}> 
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="signin">Sign in</TabsTrigger>
                 <TabsTrigger value="signup">Create account</TabsTrigger>
