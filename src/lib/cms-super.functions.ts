@@ -196,7 +196,8 @@ export const adminGetAiUsage = createServerFn({ method: "GET" })
     };
   });
 
-// ---- Subscriptions ----nexport const adminListSubscriptions = createServerFn({ method: "GET" })
+// ---- Subscriptions ----
+export const adminListSubscriptions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertSuperAdmin(context);
