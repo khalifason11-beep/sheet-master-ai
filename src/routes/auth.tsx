@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import { GraduationCap, Loader2 } from "lucide-react";
 
@@ -67,24 +66,17 @@ function AuthPage() {
   const handleGoogle = async () => {
     setLoading(true);
     try {
-      // Build the proper callback URL for OAuth redirect
-      const callbackUrl = `${window.location.origin}/auth/callback`;
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: callbackUrl });
-      
-      if (result.error) {
-        toast.error("Google sign-in failed: " + (result.error instanceof Error ? result.error.message : "Unknown error"));
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        toast.error("Google sign-in failed: " + error.message);
         setLoading(false);
-        return;
       }
-      
-      // If redirected is true, the browser will handle the redirect automatically
-      if (result.redirected) {
-        return;
-      }
-      
-      // If we get here, the OAuth flow completed without redirect
-      router.invalidate();
-      navigate({ to: "/dashboard" });
     } catch (err: any) {
       toast.error("Google sign-in error: " + (err.message || "Unknown error"));
       setLoading(false);
